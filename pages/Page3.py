@@ -4,6 +4,7 @@ from utils.func import get_head_title, hide_header_icons, section_title
 import plotly.express as px
 from utils.load_data import get_data
 from plotly.subplots import make_subplots
+import plotly.graph_objects as go
 
 menu_with_redirect()
 hide_header_icons()
@@ -53,57 +54,97 @@ section_title("เปอร์เซ็นต์การลดราคาม�
 # data_sorted = data_all.sort_values(by='per_discount_format', ascending=False)
 data_sorted = data_all.sort_values(by=['per_discount_format', 'amount_sold_format'], ascending=[False, True])
 
-st.write("**ข้าวเหนียวพันธุ์ กข6**")
-data_sorted1=data_sorted[data_sorted['product_nm'] == 'ข้าวเหนียวพันธุ์ กข6']
-get_line_plot(data_sorted1)
+def get_line_trace(data, product_name):
+    trace = go.Scatter(
+        x=data['per_discount_format'],
+        y=data['total_value'],
+        mode='lines+markers',
+        name=product_name
+    )
+    return trace
 
-st.write("**ข้าวเหนียวก่ำ**")
-data_sorted2=data_sorted[data_sorted['product_nm'] == 'ข้าวเหนียวก่ำ']
-get_line_plot(data_sorted2)
+# Create a subplot with 3 rows and 2 columns (adjust if needed)
+fig = make_subplots(rows=3, cols=2, subplot_titles=[
+    "ข้าวเหนียวพันธุ์ กข6", "ข้าวเหนียวก่ำ", "ข้าวเหนียวเขี้ยวงู", 
+    "ข้าวหอมนิลล้านนา", "ข้าวเหนียวสันป่าตอง", "ข้าวหอมมะลิแท้เชียงราย100%"
+])
 
-st.write("**ข้าวเหนียวเขี้ยวงู**")
-data_sorted3=data_sorted[data_sorted['product_nm'] == 'ข้าวเหนียวเขี้ยวงู']
-get_line_plot(data_sorted3)
+# Add the traces to the subplot grid
+fig.add_trace(get_line_trace(data_sorted[data_sorted['product_nm'] == 'ข้าวเหนียวพันธุ์ กข6'], 'ข้าวเหนียวพันธุ์ กข6'), row=1, col=1)
+fig.add_trace(get_line_trace(data_sorted[data_sorted['product_nm'] == 'ข้าวเหนียวก่ำ'], 'ข้าวเหนียวก่ำ'), row=1, col=2)
+fig.add_trace(get_line_trace(data_sorted[data_sorted['product_nm'] == 'ข้าวเหนียวเขี้ยวงู'], 'ข้าวเหนียวเขี้ยวงู'), row=2, col=1)
+fig.add_trace(get_line_trace(data_sorted[data_sorted['product_nm'] == 'ข้าวหอมนิลล้านนา'], 'ข้าวหอมนิลล้านนา'), row=2, col=2)
+fig.add_trace(get_line_trace(data_sorted[data_sorted['product_nm'] == 'ข้าวเหนียวสันป่าตอง'], 'ข้าวเหนียวสันป่าตอง'), row=3, col=1)
+fig.add_trace(get_line_trace(data_sorted[data_sorted['product_nm'] == 'ข้าวหอมมะลิแท้เชียงราย100%'], 'ข้าวหอมมะลิแท้เชียงราย100%'), row=3, col=2)
 
-st.write("**ข้าวหอมนิลล้านนา**")
-data_sorted4=data_sorted[data_sorted['product_nm'] == 'ข้าวหอมนิลล้านนา']
-get_line_plot(data_sorted4)
+# Update X and Y axes titles for each subplot
+# Row 1
+fig.update_xaxes(title_text="% ส่วนลด", row=1, col=1)
+fig.update_yaxes(title_text="ยอดขาย", row=1, col=1)
+fig.update_xaxes(title_text="% ส่วนลด", row=1, col=2)
+fig.update_yaxes(title_text="ยอดขาย", row=1, col=2)
 
-st.write("**ข้าวเหนียวสันป่าตอง**")
-data_sorted5=data_sorted[data_sorted['product_nm'] == 'ข้าวเหนียวสันป่าตอง']
-get_line_plot(data_sorted5)
+# Row 2
+fig.update_xaxes(title_text="% ส่วนลด", row=2, col=1)
+fig.update_yaxes(title_text="ยอดขาย", row=2, col=1)
+fig.update_xaxes(title_text="% ส่วนลด", row=2, col=2)
+fig.update_yaxes(title_text="ยอดขาย", row=2, col=2)
 
-st.write("**ข้าวหอมมะลิแท้เชียงราย100%**")
-data_sorted6=data_sorted[data_sorted['product_nm'] == 'ข้าวหอมมะลิแท้เชียงราย100%']
-get_line_plot(data_sorted6)
+# Row 3
+fig.update_xaxes(title_text="% ส่วนลด", row=3, col=1)
+fig.update_yaxes(title_text="ยอดขาย", row=3, col=1)
+fig.update_xaxes(title_text="% ส่วนลด", row=3, col=2)
+fig.update_yaxes(title_text="ยอดขาย", row=3, col=2)
+# Update layout for the entire subplot figure
+fig.update_layout(
+    height=900,  # Adjust height for your subplots
+    title_text="",
+    showlegend=False,  # Hide the legend (optional)
+    yaxis_title="ยอดขาย",
+    xaxis_title="% ส่วนลด"
+)
 
+# Display in Streamlit
+st.plotly_chart(fig, theme="streamlit")
 
 st.divider()
 section_title("การลดราคามากกว่า 30% มีผลทำให้ยอดขายเพิ่มขึ้นหรือไม่")
 data_all = data_all[data_all['per_discount_format'] > 30]
 data_sorted = data_all.sort_values(by=['per_discount_format', 'amount_sold_format'], ascending=[False, True])
+# Add the traces to the subplot grid
+fig.add_trace(get_line_trace(data_sorted[data_sorted['product_nm'] == 'ข้าวเหนียวพันธุ์ กข6'], 'ข้าวเหนียวพันธุ์ กข6'), row=1, col=1)
+fig.add_trace(get_line_trace(data_sorted[data_sorted['product_nm'] == 'ข้าวเหนียวก่ำ'], 'ข้าวเหนียวก่ำ'), row=1, col=2)
+fig.add_trace(get_line_trace(data_sorted[data_sorted['product_nm'] == 'ข้าวเหนียวเขี้ยวงู'], 'ข้าวเหนียวเขี้ยวงู'), row=2, col=1)
+fig.add_trace(get_line_trace(data_sorted[data_sorted['product_nm'] == 'ข้าวหอมนิลล้านนา'], 'ข้าวหอมนิลล้านนา'), row=2, col=2)
+fig.add_trace(get_line_trace(data_sorted[data_sorted['product_nm'] == 'ข้าวเหนียวสันป่าตอง'], 'ข้าวเหนียวสันป่าตอง'), row=3, col=1)
+fig.add_trace(get_line_trace(data_sorted[data_sorted['product_nm'] == 'ข้าวหอมมะลิแท้เชียงราย100%'], 'ข้าวหอมมะลิแท้เชียงราย100%'), row=3, col=2)
 
-st.write("**ข้าวเหนียวพันธุ์ กข6**")
-data_sorted1=data_sorted[data_sorted['product_nm'] == 'ข้าวเหนียวพันธุ์ กข6']
-get_line_plot(data_sorted1)
+# Update X and Y axes titles for each subplot
+# Row 1
+fig.update_xaxes(title_text="% ส่วนลด", row=1, col=1)
+fig.update_yaxes(title_text="ยอดขาย", row=1, col=1)
+fig.update_xaxes(title_text="% ส่วนลด", row=1, col=2)
+fig.update_yaxes(title_text="ยอดขาย", row=1, col=2)
 
-st.write("**ข้าวเหนียวก่ำ**")
-data_sorted2=data_sorted[data_sorted['product_nm'] == 'ข้าวเหนียวก่ำ']
-get_line_plot(data_sorted2)
+# Row 2
+fig.update_xaxes(title_text="% ส่วนลด", row=2, col=1)
+fig.update_yaxes(title_text="ยอดขาย", row=2, col=1)
+fig.update_xaxes(title_text="% ส่วนลด", row=2, col=2)
+fig.update_yaxes(title_text="ยอดขาย", row=2, col=2)
 
-st.write("**ข้าวเหนียวเขี้ยวงู**")
-data_sorted3=data_sorted[data_sorted['product_nm'] == 'ข้าวเหนียวเขี้ยวงู']
-get_line_plot(data_sorted3)
+# Row 3
+fig.update_xaxes(title_text="% ส่วนลด", row=3, col=1)
+fig.update_yaxes(title_text="ยอดขาย", row=3, col=1)
+fig.update_xaxes(title_text="% ส่วนลด", row=3, col=2)
+fig.update_yaxes(title_text="ยอดขาย", row=3, col=2)
+# Update layout for the entire subplot figure
+fig.update_layout(
+    height=900,  # Adjust height for your subplots
+    title_text="",
+    showlegend=False,  # Hide the legend (optional)
+    yaxis_title="ยอดขาย",
+    xaxis_title="% ส่วนลด"
+)
 
-st.write("**ข้าวหอมนิลล้านนา**")
-data_sorted4=data_sorted[data_sorted['product_nm'] == 'ข้าวหอมนิลล้านนา']
-get_line_plot(data_sorted4)
-
-st.write("**ข้าวเหนียวสันป่าตอง**")
-data_sorted5=data_sorted[data_sorted['product_nm'] == 'ข้าวเหนียวสันป่าตอง']
-get_line_plot(data_sorted5)
-
-st.write("**ข้าวหอมมะลิแท้เชียงราย100%**")
-data_sorted6=data_sorted[data_sorted['product_nm'] == 'ข้าวหอมมะลิแท้เชียงราย100%']
-get_line_plot(data_sorted6)
-# get_line_plot(data_sorted)
+# Display in Streamlit
+st.plotly_chart(fig, theme="streamlit")
