@@ -43,6 +43,23 @@ def get_line_plot(data):
     st.plotly_chart(fig, theme="streamlit")
     return None
 
+desc_msg1 = '''
+    จากการวิเคราะห์พบว่า:\n
+    - ค่าความสัมพันธ์ (Correlation) ระหว่างเปอร์เซ็นต์การลดราคากับยอดขายของสินค้าอยู่ที่ 0.31 ซึ่งแสดงถึงความสัมพันธ์ในทางบวกระดับปานกลาง นั่นคือ เมื่อเปอร์เซ็นต์การลดราคาเพิ่มขึ้น ยอดขายของสินค้ามีแนวโน้มที่จะเพิ่มขึ้นเช่นกัน
+
+'''
+desc_msg2 = '''
+    จากการวิเคราะห์พบว่า: \n
+    - สินค้าที่มีการลดราคามากกว่า 30% มียอดขายเฉลี่ยที่ **1,346,019.34 บาท**
+    - สินค้าที่มีการลดราคาเท่ากับหรือน้อยกว่า 30% มียอดขายเฉลี่ยที่ **62,899.94 บาท**
+    - สินค้า ข้าวเหนียวพันธุ์ กข6 และ ข้าวเหนียวสันป่าตอง มียอดขายเฉลี่ยเพิ่มขึ้นอย่างมากเมื่อมีการลดราคามากกว่า 30% โดยยอดขายเฉลี่ยเพิ่มขึ้นจาก 1,654 ชิ้นเป็น 12,359 ชิ้น และจาก 623 ชิ้นเป็น 11,200 ชิ้นตามลำดับ
+    - สำหรับสินค้าอื่น ๆ เช่น ข้าวหอมนิลล้านนา มียอดขายเพิ่มขึ้นเล็กน้อยเมื่อมีการลดราคามากกว่า 30% ในขณะที่ ข้าวเหนียวก่ำ และ ข้าวเหนียวเขี้ยวงู มียอดขายลดลง
+'''
+summary2 = '''
+    สรุป:\n
+    การลดราคามากกว่า 30% ส่งผลให้ยอดขายเพิ่มขึ้นอย่างมากเมื่อเทียบกับสินค้าที่ลดราคาน้อยกว่าหรือเท่ากับ 30%
+'''
+
 data_all = get_data()
 data_all = data_all[['marketplace', 'product_name', 'product_nm', 'star_review', 'original_price', 'discount_price_format', 'per_discount_format', 'amount_sold_format', 'total_value']]
 data_all = data_all[data_all['per_discount_format'] > 0]
@@ -105,6 +122,7 @@ fig.update_layout(
 
 # Display in Streamlit
 st.plotly_chart(fig, theme="streamlit")
+st.markdown(desc_msg1)
 
 st.divider()
 section_title("การลดราคามากกว่า 30% มีผลทำให้ยอดขายเพิ่มขึ้นหรือไม่")
@@ -153,3 +171,7 @@ fig.update_layout(
 
 # Display in Streamlit
 st.plotly_chart(fig, theme="streamlit")
+
+st.markdown(desc_msg2)
+st.markdown(summary2)
+

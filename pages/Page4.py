@@ -169,21 +169,41 @@ def get_bar_comparison(data, mean_total_value, mean_amount_sold, is_shopee=False
     st.plotly_chart(fig, theme="streamlit")
     return None
 
+desc_msg1 = '''
+    จากการวิเคราะห์พบว่า: \n
+    - สินค้าที่มีราคาหลังหักส่วนลดต่ำกว่าค่าเฉลี่ยได้รับคะแนนรีวิวเฉลี่ยอยู่ที่ **4.63**
+    - สินค้าที่มีราคาหลังหักส่วนลดสูงกว่าค่าเฉลี่ยได้รับคะแนนรีวิวเฉลี่ยอยู่ที่ **4.47**
+'''
+summary1 = '''
+    สรุป:\n
+    สินค้าที่มีราคาหลังหักส่วนลดต่ำกว่าค่าเฉลี่ยมีแนวโน้มได้รับรีวิวดีกว่าสินค้าที่มีราคาหลังหักส่วนลดสูงกว่าค่าเฉลี่ย
+'''
+
+desc_msg2 = '''
+    จากการวิเคราะห์พบว่า: \n
+    - **Shopee**: จังหวัดที่มียอดใช้จ่ายสูงสุดคือ **นครราชสีมา** มียอดขายรวม 33,338,669 บาท
+    - **Lazada**: จังหวัดที่มียอดใช้จ่ายสูงสุดคือ **นนทบุรี** แต่มียอดขายต่ำกว่า Shopee อย่างมาก
+'''
+summary2 = '''
+    สรุป:\n
+    จังหวัดนครราชสีมาเป็นพื้นที่ที่มียอดใช้จ่ายสูงสุดใน Shopee ในขณะที่ Lazada ทำยอดขายสูงสุดในกรุงเทพฯ แสดงถึงความแตกต่างในกลุ่มเป้าหมายแต่ละแพลตฟอร์ม
+'''
+
 data_all = get_data()
 data_all = data_all[['marketplace', 'product_nm', 'star_review', 'original_price', 'discount_price_format', 'per_discount_format', 'amount_sold_format', 'province', 'total_value']]
 data_all = data_all[data_all['amount_sold_format'] > 0]
 
 data_all['province'] = data_all['province'].str.replace('China', 'ต่างประเทศ').str.replace('Loei', 'เลย')
-
-
 section_title("สินค้าที่มีราคาหลังหักส่วนลดต่ำกว่าค่าเฉลี่ยได้รับรีวิวดีขึ้นหรือไม่") #discount_price, star_review
 data_sorted = data_all.sort_values(by='discount_price_format', ascending=False)
 get_scatter_plot(data_sorted)
+st.markdown(desc_msg1)
+st.markdown(summary1)
 
 st.divider()
 section_title("ร้านในพื้นที่ใดมีแนวโน้มที่จะมีลูกค้าใช้จ่ายมากที่สุดในสินค้าที่มีราคาสูงหลังหักส่วนลด") #province, original_price, amount_sold
 
-st.write("shopee")
+st.write("**Shopee**")
 data_all1 = data_all[data_all['marketplace'] == 'shopee']  
 # data_stat = data_all1.describe()
 # st.write(data_stat)
@@ -203,7 +223,7 @@ df_melted = df_melted.sort_values(by=['metric', 'value'], ascending=[False, True
 # mean_amount_sold = df_melted[df_melted['metric'] == 'amount_sold_format']['value'].mean()
 get_bar_comparison(df_melted, mean_total_value, mean_amount_sold, True)
 
-st.write("lazada")
+st.write("**Lazada**")
 data_all = data_all[data_all['marketplace'] == 'lazada']  
 # data_stat = data_all.describe()
 # st.write(data_stat)
@@ -222,3 +242,5 @@ df_melted = df_melted.sort_values(by=['metric', 'value'], ascending=[False, True
 # mean_total_value = df_melted[df_melted['metric'] == 'total_value']['value'].mean()
 # mean_amount_sold = df_melted[df_melted['metric'] == 'amount_sold_format']['value'].mean()
 get_bar_comparison(df_melted, mean_total_value, mean_amount_sold)
+st.markdown(desc_msg1)
+st.markdown(summary1)

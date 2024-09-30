@@ -50,7 +50,6 @@ def get_bar_plot_group(data, title):
 
     sorted_df_final = data.sort_values(by=['marketplace', 'amount_sold_format'], ascending=[False, True])
     sorted_df_final.rename(columns={'amount_sold_format': 'ยอดขาย'}, inplace=True)
-    st.write(sorted_df_final)
     fig = px.bar(
         sorted_df_final,
         x='ยอดขาย', 
@@ -87,6 +86,26 @@ def get_bar_plot_group(data, title):
     )
     st.plotly_chart(fig, theme="streamlit")
 
+
+desc_msg1 = '''
+    จากผลการวิเคราะห์ พบว่า **Shopee** มียอดขายเฉลี่ยของสินค้าสูงกว่าที่ **186,093.12** บาท หรือประมาณ 48,756,397 บาท ในขณะที่ **Lazada** มียอดขายเฉลี่ยอยู่ที่ **54,334.93** บาท หรือประมาณ 9,399,943 บาท
+'''
+summary1 = '''
+    สรุป:\n
+    Shopee มียอดขายเฉลี่ยสูงกว่า Lazada อย่างมีนัยสำคัญในชุดข้อมูลนี้
+'''
+
+desc_msg2 = '''
+    จากการวิเคราะห์ข้อมูล สินค้าที่ขายดีที่สุดในแต่ละแพลตฟอร์มมีดังนี้:\n
+    - **Shopee**: สินค้าที่ขายดีที่สุดคือ "ข้าวเหนียวพันธุ์ กข6" มียอดขายจำนวน 155,436 หน่วย
+    - **Lazada**: สินค้าที่ขายดีที่สุดคือ "ข้าวเหนียวเขี้ยวงู" มียอดขายจำนวน 18,545 หน่วย
+    
+'''
+summary2 = '''
+    สรุป:\n
+    สินค้าที่ขายดีที่สุดใน Shopee และ Lazada แตกต่างกันอย่างมาก โดย Shopee มียอดขายสูงกว่า Lazada มากกว่า 8 เท่าตัว
+'''
+
 # Prepare data
 data_all = get_data()
 
@@ -106,10 +125,17 @@ display.rename(columns={'total_value_sum': 'ยอดขายรวม', 'total
 st.dataframe(display, hide_index=True)
 get_bar_plot(grouped_df, "")
 
+st.markdown(desc_msg1)
+st.markdown(summary1)
+
+
 
 st.divider()
 section_title("สินค้าที่ขายดีที่สุดใน Shopee และ Lazada แตกต่างกันมากน้อยเพียงใด")
 grouped_df = data_all.groupby(['marketplace', 'product_nm'])['amount_sold_format'].sum().reset_index()
 get_bar_plot_group(grouped_df, "")
+st.markdown(desc_msg2)
+st.markdown(summary2)
+
 
 
