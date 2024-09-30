@@ -1,6 +1,6 @@
 import streamlit as st
 from menu import menu_with_redirect
-from utils.func import get_head_title, hide_header_icons, section_title
+from utils.func import break_page, get_head_title, hide_header_icons, section_title
 import plotly.express as px
 from utils.load_data import get_data
 from plotly.subplots import make_subplots
@@ -125,6 +125,7 @@ st.plotly_chart(fig, theme="streamlit")
 st.markdown(desc_msg1)
 
 st.divider()
+break_page()
 section_title("การลดราคามากกว่า 30% มีผลทำให้ยอดขายเพิ่มขึ้นหรือไม่")
 data_all = data_all[data_all['per_discount_format'] > 30]
 data_sorted = data_all.sort_values(by=['per_discount_format', 'amount_sold_format'], ascending=[False, True])

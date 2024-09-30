@@ -1,5 +1,5 @@
 import streamlit as st
-from utils.func import get_color_map, get_head_title, section_title
+from utils.func import break_page, get_color_map, get_head_title, section_title
 from utils.load_data import get_data
 import plotly.express as px
 
@@ -128,9 +128,8 @@ get_bar_plot(grouped_df, "")
 st.markdown(desc_msg1)
 st.markdown(summary1)
 
-
-
 st.divider()
+break_page()
 section_title("สินค้าที่ขายดีที่สุดใน Shopee และ Lazada แตกต่างกันมากน้อยเพียงใด")
 grouped_df = data_all.groupby(['marketplace', 'product_nm'])['amount_sold_format'].sum().reset_index()
 get_bar_plot_group(grouped_df, "")

@@ -1,10 +1,7 @@
 import streamlit as st
-from menu import menu_with_redirect
-import pandas as pd
 import plotly.express as px
-from utils.func import break_page, get_color_map, get_head_title, hide_header_icons, section_title
+from utils.func import break_page, get_head_title, section_title
 from utils.load_data import get_data
-from utils.text_editor import generate, get_color_template
 
 get_head_title(2, "เพื่อโอกาสในการพัฒนาสินค้า")
     

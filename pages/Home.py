@@ -16,6 +16,13 @@ desc_msg = '''
     - **Lazada** เก็บข้อมูล ณ วันที่ 24/09/2567
 '''
 st.markdown(desc_msg)
+with open("data/rice-mfu.pdf", "rb") as pdf_file:
+    PDFbyte = pdf_file.read()
+
+st.download_button(label="📄 Export Report",
+                    data=PDFbyte,
+                    file_name="rice-online-market.pdf",
+                    mime='application/octet-stream')
 
 grouped_data = data_all[['marketplace', 'product_nm']]
 grouped_data = grouped_data.groupby(['marketplace', 'product_nm']).size().reset_index(name='count')
@@ -26,10 +33,3 @@ data_all = data_all[['product_nm', 'marketplace', 'province', 'star_review', 'or
 data_all.rename(columns={'product_nm': 'Keywords', 'province': 'จังหวัด', 'star_review': 'คะแนนรีวิว', 'original_price': 'ราคาก่อนลด (฿)', 'discount_price_format': 'ราคาหลังหักส่วนลด (฿)','amount_sold_format': 'ยอดขาย (ชิ้น)', 'total_value': 'ยอดขาย'}, inplace=True)
 st.dataframe(data_all, hide_index=True)
 
-# with open("data/doh-clay.pdf", "rb") as pdf_file:
-#     PDFbyte = pdf_file.read()
-
-# st.download_button(label="📄 Export Report",
-#                     data=PDFbyte,
-#                     file_name="doh-clay.pdf",
-#                     mime='application/octet-stream')

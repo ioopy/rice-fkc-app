@@ -1,12 +1,9 @@
 import streamlit as st
-from menu import menu_with_redirect
 import pandas as pd
 import plotly.express as px
-from utils.func import break_page, get_color_map, get_head_title, hide_header_icons, section_title
+from utils.func import break_page, get_head_title, section_title
 from utils.load_data import get_data
-from utils.text_editor import generate
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 import numpy as np
 
 get_head_title(5, "เพื่อหาช่องทางการขายที่เหมาะสม")
@@ -181,9 +178,11 @@ st.dataframe(discount_stats_display, hide_index=True)
 discount_stats = discount_stats.sort_values(by='marketplace', ascending=False)
 get_bar_comparison(discount_stats)
 st.markdown(desc_msg1)
+break_page()
 st.markdown(summary1)
 
 st.divider()
+break_page()
 section_title("ยอดขายของสินค้าที่มีส่วนลดสูงสุดใน Shopee และ Lazada แตกต่างกันมากน้อยเพียงใด")
 bins = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 labels = ['0-10%', '11-20%', '21-30%', '31-40%', '41-50%', '51-60%', '61-70%', '71-80%', '81-90%', '91-100%']

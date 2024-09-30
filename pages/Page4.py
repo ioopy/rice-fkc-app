@@ -1,10 +1,8 @@
 import streamlit as st
-from menu import menu_with_redirect
 import pandas as pd
 import plotly.express as px
-from utils.func import break_page, get_color_map, get_head_title, hide_header_icons, section_title
+from utils.func import break_page, get_head_title, section_title
 from utils.load_data import get_data
-from utils.text_editor import generate
 import plotly.graph_objects as go
 
 from plotly.subplots import make_subplots
@@ -201,6 +199,7 @@ st.markdown(desc_msg1)
 st.markdown(summary1)
 
 st.divider()
+break_page()
 section_title("ร้านในพื้นที่ใดมีแนวโน้มที่จะมีลูกค้าใช้จ่ายมากที่สุดในสินค้าที่มีราคาสูงหลังหักส่วนลด") #province, original_price, amount_sold
 
 st.write("**Shopee**")
@@ -242,5 +241,6 @@ df_melted = df_melted.sort_values(by=['metric', 'value'], ascending=[False, True
 # mean_total_value = df_melted[df_melted['metric'] == 'total_value']['value'].mean()
 # mean_amount_sold = df_melted[df_melted['metric'] == 'amount_sold_format']['value'].mean()
 get_bar_comparison(df_melted, mean_total_value, mean_amount_sold)
+break_page()
 st.markdown(desc_msg1)
 st.markdown(summary1)
