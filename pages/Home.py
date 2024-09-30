@@ -23,6 +23,7 @@ grouped_data.rename(columns={'product_nm': 'keywords'}, inplace=True)
 st.dataframe(grouped_data, hide_index=True)
 st.write("**Data**")
 data_all = data_all[['product_nm', 'marketplace', 'province', 'star_review', 'original_price', 'discount_price_format', 'amount_sold_format']]
+data_all.rename(columns={'product_nm': 'Keywords', 'province': 'จังหวัด', 'star_review': 'คะแนนรีวิว', 'original_price': 'ราคาก่อนลด (฿)', 'discount_price_format': 'ราคาหลังหักส่วนลด (฿)','amount_sold_format': 'ยอดขาย (ชิ้น)', 'total_value': 'ยอดขาย'}, inplace=True)
 st.dataframe(data_all, hide_index=True)
 
 # with open("data/doh-clay.pdf", "rb") as pdf_file:
