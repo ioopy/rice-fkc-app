@@ -46,103 +46,81 @@ def get_bar_plot(data, title, is_grop=False):
     )
     st.plotly_chart(fig, theme="streamlit")
 
-def get_bar_comparison(data, mean_total_value, mean_amount_sold):
+def get_bar_comparison(data):
     marketplace_colors = {
         'shopee': '#FE6132',
-        'lazada': '#0F0C76 ',
+        'lazada': '#0F0C76',
     }
+    
+    # Assuming data['marketplace'] contains categorical data for Shopee and Lazada
     data['color'] = data['marketplace'].map(marketplace_colors)
 
-    fig = make_subplots(rows=1, cols=2, 
-                        shared_yaxes=True,  # Share the y-axis (province)
-                        column_titles=["ยอดขายรวม", "จำนวนขาย (ชิ้น)"],  # Titles for the subplots
-                        horizontal_spacing=0.05)  # Adjust spacing between subplots
+    fig = go.Figure()
 
+    # Adding Shopee's total_value (y-axis 1)
     fig.add_trace(
         go.Bar(
-            y=data['marketplace'],  # Common y-axis (province)
-            x=data['total_value'],  # 'total_value' on the x-axis
-            orientation='h',  # Horizontal bars
-            name='ยอดขายรวม',
-            marker=dict(color=data['color'],line=dict(width=1)),  # Customize bar border (line width)
+            x=data['marketplace'],  # Categories (Shopee, Lazada)
+            y=data['total_value'],  # First Y-axis (total_value)
+            name='ยอดขาย',
+            marker=dict(color='#386641'),
             text=data['total_value'],
-            textposition='auto',texttemplate='%{text:,.0f}',
-            textangle=0, cliponaxis=False
-        ),
-        row=1, col=1  # First subplot
+            textposition='auto',
+            texttemplate='%{text:,.0f}',
+            offsetgroup=1,  
+            yaxis='y1'  # Associate with the first y-axis
+        )
     )
 
-    fig.add_shape(
-        type="line",
-        x0=mean_total_value, x1=mean_total_value,  # Vertical line at mean value
-        y0=0, y1=1.5,  # Full height of the graph (normalized y-coordinates)
-        xref="x1", yref="paper",  # Refer to the first x-axis and full figure height
-        line=dict(color="red", width=2, dash="dash"),  # Style of the mean line
-        row=1, col=1  # First subplot
-    )
-    fig.add_annotation(
-        x=mean_total_value * 1.5, 
-        y=1.5,  # Position the annotation at the top of the graph
-        showarrow=False,
-        xref="x1", 
-        yref="paper", 
-        text=f"ค่าเฉลี่ย: {mean_total_value:,.2f}",  # Text showing the mean value
-        font=dict(color="red", size=12),  # Customize font color and size
-        row=1, col=1  # Apply to the first subplot
-    )
-
+    # Adding Lazada's amount_sold_format (y-axis 2)
     fig.add_trace(
         go.Bar(
-            y=data['marketplace'],  # Common y-axis (province)
-            x=data['amount_sold_format'],  # 'amount_sold_format' on the x-axis
-            orientation='h',  # Horizontal bars
+            x=data['marketplace'],
+            y=data['amount_sold_format'],  # Second Y-axis (amount_sold_format)
             name='จำนวนขาย (ชิ้น)',
-            marker=dict(color=data['color'],line=dict(width=1)), # Customize bar border (line width)
+            marker=dict(color='#a7c957'),
             text=data['amount_sold_format'],
-            textposition='auto',texttemplate='%{text:,.0f}',textangle=0, cliponaxis=False
-        ),
-        row=1, col=2  # Second subplot
+            textposition='auto',
+            texttemplate='%{text:,.0f}',
+            offsetgroup=2,  
+            yaxis='y2'  # Associate with the second y-axis
+        )
     )
 
-    fig.add_shape(
-        type="line",
-        x0=mean_amount_sold, x1=mean_amount_sold,  # Vertical line at mean value
-        y0=0, y1=1.5,  # Full height of the graph (normalized y-coordinates)
-        xref="x1", yref="paper",  # Refer to the first x-axis and full figure height
-        line=dict(color="red", width=2, dash="dash"),  # Style of the mean line
-        row=1, col=2  # First subplot
-    )
-    fig.add_annotation(
-        x=mean_amount_sold * 1.5, 
-        y=1.5,  # Position the annotation at the top of the graph
-        showarrow=False,
-        xref="x1", 
-        yref="paper", 
-        text=f"ค่าเฉลี่ย: {mean_amount_sold:,.2f}",  # Text showing the mean value
-        font=dict(color="red", size=12),  # Customize font color and size
-        row=1, col=2  # Apply to the first subplot
-    )
-
+    # Update layout with dual y-axes
     fig.update_layout(
-        # barmode='group',
-        showlegend=False,
-        # height=1000,
-        title={
-            'text': '',
-            'x': 0.5,
-            'xanchor': 'center',
-            'yanchor': 'top'
-        },
-        xaxis_tickfont_size=16,
-        yaxis_tickfont_size=16,
-        yaxis_title="",
+        barmode='group',  # Group bars together by marketplace
+        title='',
+        xaxis=dict(
+            title="",
+            tickfont_size=16
+        ),
+        yaxis=dict(
+            title="ยอดขาย",  # Title for the first y-axis
+            tickfont_size=16,
+            showgrid=False,  # Optionally, hide grid for clarity
+        ),
+        yaxis2=dict(
+            title="จำนวนขาย (ชิ้น)",  # Title for the second y-axis
+            overlaying='y',  # Overlay the second y-axis with the first one
+            side='right',  # Place the second y-axis on the right side
+            tickfont_size=16,
+            showgrid=False  # Optionally, hide grid for clarity
+        ),
         font=dict(size=18),
-        legend_title_text='',  # Legend title
-        xaxis=dict(title=""),  # Title for first x-axis
-        xaxis2=dict(title=""),  # Title for second x-axis
+        legend=dict(
+            orientation="h",        # Set the legend orientation to horizontal
+            yanchor="bottom",       # Anchor the legend at the bottom
+            y=1,                    # Position the legend above the graph
+            xanchor="center",       # Center the legend horizontally
+            x=0.5                   # Set the legend to the center of the x-axis
+        ),
+        legend_title_text='',
+        showlegend=True
     )
 
     st.plotly_chart(fig, theme="streamlit")
+
     return None
 
 data_all = get_data()
@@ -154,24 +132,19 @@ mean_total_value = data_all['total_value'].mean()
 mean_amount_sold = data_all['amount_sold_format'].mean()
 discount_stats = data_all.groupby('marketplace').agg({
     'amount_sold_format': 'sum',
-    'per_discount_format': 'sum',
     'total_value': 'sum'
 }).reset_index()
 
-display_data = data_all.describe().reset_index()
-display_data = display_data[['index', 'amount_sold_format', 'total_value']]
-display_data.rename(columns={'index': '', 'amount_sold_format': 'ยอดขาย (ชิ้น)', 'total_value': 'ยอดขาย'}, inplace=True)
-st.dataframe(display_data, hide_index=True)
-# avg_discount = data_all.groupby('marketplace')['per_discount_format'].mean()
-# Calculate correlation between discount and sales for each marketplace
-# correlation = data_all.groupby('marketplace').apply(lambda x: x['per_discount_format'].corr(x['total_value']))
-# discount_stats.rename(columns={'per_discount_format': 'percent_discount', 'total_value': 'amount_sold'}, inplace=True)
-# total_discount = discount_stats['percent_discount'].sum()
-# discount_stats['percent_of_total_discount'] = (discount_stats['percent_discount'] / total_discount) * 100
-# discount_stats['percent_of_total_discount'] = discount_stats['percent_of_total_discount'].map("{:.2f}%".format)
-# mean_total_value = discount_stats['total_value'].mean()
-# mean_amount_sold = discount_stats['amount_sold_format'].mean()
-get_bar_comparison(discount_stats, mean_total_value, mean_amount_sold)
+discount_stats_display = data_all.groupby('marketplace').agg({
+    'per_discount_format': 'mean',
+    'amount_sold_format': 'sum',
+    'total_value': 'sum'
+}).reset_index()
+discount_stats_display['per_discount_format'] = discount_stats_display['per_discount_format'].apply(lambda x: f"{x:.2f}%")
+discount_stats_display.rename(columns={'per_discount_format': 'ค่าเฉลี่ยส่วนลด', 'amount_sold_format': 'ยอดขาย (ชิ้น)', 'total_value': 'ยอดขาย'}, inplace=True)
+st.dataframe(discount_stats_display, hide_index=True)
+discount_stats = discount_stats.sort_values(by='marketplace', ascending=False)
+get_bar_comparison(discount_stats)
 
 st.divider()
 section_title("ยอดขายของสินค้าที่มีส่วนลดสูงสุดใน Shopee และ Lazada แตกต่างกันมากน้อยเพียงใด")
