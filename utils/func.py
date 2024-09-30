@@ -1,6 +1,8 @@
 import pandas as pd
 import streamlit as st
 
+from menu import menu_with_redirect
+
 def convert_amount_sold(amount_str):
     if isinstance(amount_str, int):
         return amount_str
@@ -16,8 +18,12 @@ def convert_amount_sold(amount_str):
         return int(amount_str)
     
 def get_head_title(no, sub):
+    st.set_page_config(page_title=f"การวิเคราะห์ที่ {no}", page_icon="📈")
     st.header(f":blue[การวิเคราะห์ที่ {no}]", divider=True)
     st.subheader(sub)
+
+    menu_with_redirect()
+    hide_header_icons()
     return None
 
 def section_title(text):
@@ -36,8 +42,8 @@ def hide_header_icons():
 
 def get_color_map():
     return {
-        'shopee': 'coral',  
-        'lazada': 'magenta', 
+        'shopee': '#FE6132',  
+        'lazada': '#0F0C76', 
     }
 
 def break_page():

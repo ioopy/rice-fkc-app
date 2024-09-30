@@ -1,6 +1,7 @@
 import pandas as pd
 from utils.func import convert_amount_sold
 import os
+import streamlit as st
 
 def rename_columns(data):
     return data.rename(columns={'itemid': 'itemId', 'shopid': 'shopId'})
@@ -29,6 +30,7 @@ def format_star_review(data):
     data['star_review'] = pd.to_numeric(data['star_review'], errors='coerce')
     return data
 
+@st.cache_data
 def load_data(src):
     dataframes = []
     folder = f'data/{src}'
@@ -40,6 +42,7 @@ def load_data(src):
     combined_df = pd.concat(dataframes, ignore_index=True)
     return combined_df
 
+@st.cache_data
 def get_data():
     shopee_data = load_data("shopee")
     lazada_data = load_data("lazada")

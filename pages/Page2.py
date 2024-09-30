@@ -6,8 +6,7 @@ from utils.func import break_page, get_color_map, get_head_title, hide_header_ic
 from utils.load_data import get_data
 from utils.text_editor import generate, get_color_template
 
-menu_with_redirect()
-hide_header_icons()
+get_head_title(2, "เพื่อโอกาสในการพัฒนาสินค้า")
     
 marketplace_colors = {
         'shopee': '#FE6132',
@@ -125,7 +124,7 @@ data_all = get_data()
 data_all = data_all[['marketplace', 'product_nm', 'star_review', 'original_price', 'discount_price_format', 'amount_sold_format']]
 data_all = data_all[data_all['amount_sold_format'] > 0]
 
-get_head_title(2, "เพื่อโอกาสในการพัฒนาสินค้า")
+
 section_title("สินค้าที่มียอดรีวิวเฉลี่ยสูงที่สุดในแต่ละแพลตฟอร์มคืออะไร")
 mean_star_review = data_all['star_review'].mean()
 grouped_df = data_all.groupby(['marketplace', 'product_nm'])['star_review'].mean().reset_index()

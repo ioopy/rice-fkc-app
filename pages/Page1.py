@@ -1,18 +1,10 @@
-import pandas as pd
 import streamlit as st
-import plotly.graph_objects as go
-from menu import menu_with_redirect
-from utils.func import break_page, get_head_title, hide_header_icons, section_title
+from utils.func import get_color_map, get_head_title, section_title
 from utils.load_data import get_data
 import plotly.express as px
-import numpy as np
 
-menu_with_redirect()
-hide_header_icons()
-marketplace_colors = {
-        'shopee': '#FE6132',
-        'lazada': '#0F0C76 ',
-}
+get_head_title(1, "เพื่อศึกษาแบรนด์ที่ยอดขายสูง")
+
 def get_bar_plot(data, title, is_grop=False):
     if is_grop:
         data = data.sort_values(by=['marketplace', 'amount_sold_format'], ascending=[False, True])
@@ -22,7 +14,7 @@ def get_bar_plot(data, title, is_grop=False):
             x='ยอดขาย', 
             y='product_nm',
             color=data["marketplace"],
-            color_discrete_map=marketplace_colors,
+            color_discrete_map=get_color_map(),
             orientation='h',
             barmode='group',
             height=700,
@@ -38,7 +30,7 @@ def get_bar_plot(data, title, is_grop=False):
             color=data["marketplace"],
             orientation='h',
             text='ยอดขาย',
-            color_discrete_map=marketplace_colors,
+            color_discrete_map=get_color_map(),
         )         
     fig.update_traces(texttemplate='%{text:.2s}', textposition='auto')
     fig.update_layout(
@@ -66,7 +58,7 @@ def get_bar_plot(data, title, is_grop=False):
     )
     st.plotly_chart(fig, theme="streamlit")
 
-def get_bar_plot_group(data, title, is_grop=False):
+def get_bar_plot_group(data, title):
     new_row = {'marketplace': 'shopee', 'product_nm': 'ข้าวพันธุ์ กข 10', 'amount_sold_format': 0}
     data = data._append(new_row, ignore_index=True)
 
@@ -81,7 +73,7 @@ def get_bar_plot_group(data, title, is_grop=False):
         orientation='h',
         barmode='group',
         height=700,
-        color_discrete_map=marketplace_colors,
+        color_discrete_map=get_color_map(),
         text='ยอดขาย')
     fig.update_traces(texttemplate='%{text:.2s} ชิ้น', textposition='auto')
     fig.update_layout(
@@ -109,8 +101,6 @@ def get_bar_plot_group(data, title, is_grop=False):
     )
     st.plotly_chart(fig, theme="streamlit")
 
-get_head_title(1, "เพื่อศึกษาแบรนด์ที่ยอดขายสูง")
-
 # Prepare data
 data_all = get_data()
 
@@ -125,6 +115,6 @@ get_bar_plot(grouped_df, "")
 st.divider()
 section_title("สินค้าที่ขายดีที่สุดใน Shopee และ Lazada แตกต่างกันมากน้อยเพียงใด")
 grouped_df = data_all.groupby(['marketplace', 'product_nm'])['amount_sold_format'].sum().reset_index()
-get_bar_plot_group(grouped_df, "", True)
+get_bar_plot_group(grouped_df, "")
 
 

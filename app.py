@@ -7,6 +7,8 @@ from streamlit_authenticator.utilities.exceptions import (LoginError)
 
 from utils.func import hide_header_icons 
 
+st.set_page_config(page_title="Report")
+
 hide_header_icons()
 
 with open('conifg.yaml', 'r', encoding='utf-8') as file:

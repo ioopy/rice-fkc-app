@@ -6,8 +6,7 @@ from utils.load_data import get_data
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 
-menu_with_redirect()
-hide_header_icons()
+get_head_title(3, "เพื่อโอกาสในการวางกลยุทธ์ทางการตลาด")
 
 def get_line_plot(data):
     fig = px.line(data, x='per_discount_format',
@@ -49,7 +48,7 @@ data_all = data_all[['marketplace', 'product_name', 'product_nm', 'star_review',
 data_all = data_all[data_all['per_discount_format'] > 0]
 data_all = data_all[data_all['amount_sold_format'] > 0]
 
-get_head_title(3, "เพื่อโอกาสในการวางกลยุทธ์ทางการตลาด")
+
 section_title("เปอร์เซ็นต์การลดราคามีความสัมพันธ์กับยอดขายของสินค้านี้อย่างไร")
 # data_sorted = data_all.sort_values(by='per_discount_format', ascending=False)
 data_sorted = data_all.sort_values(by=['per_discount_format', 'amount_sold_format'], ascending=[False, True])

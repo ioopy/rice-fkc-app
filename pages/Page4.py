@@ -10,8 +10,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 
-menu_with_redirect()
-hide_header_icons()
+get_head_title(4, "เพื่อดึงลูกค้า")
 
 def get_scatter_plot(data):
     mean_discount_price = data['discount_price_format'].mean()
@@ -177,7 +176,7 @@ data_all['total_sale'] = data_all['amount_sold_format'] * data_all['discount_pri
 data_all['province'] = data_all['province'].str.replace('China', 'ต่างประเทศ').str.replace('Loei', 'เลย')
 data_all = data_all[data_all['discount_price_format'] > 0]
 
-get_head_title(4, "เพื่อดึงลูกค้า")
+
 section_title("สินค้าที่มีราคาหลังหักส่วนลดต่ำกว่าค่าเฉลี่ยได้รับรีวิวดีขึ้นหรือไม่") #discount_price, star_review
 data_all = data_all[data_all['star_review'] > 0]
 data_sorted = data_all.sort_values(by='discount_price_format', ascending=False)

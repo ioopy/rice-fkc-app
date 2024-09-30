@@ -8,8 +8,7 @@ from utils.text_editor import generate
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-menu_with_redirect()
-hide_header_icons() 
+get_head_title(5, "เพื่อหาช่องทางการขายที่เหมาะสม")
 
 def get_bar_plot(data, title, is_grop=False):
     marketplace_colors = {
@@ -149,14 +148,20 @@ def get_bar_comparison(data, mean_total_value, mean_amount_sold):
 data_all = get_data()
 data_all = data_all[['marketplace', 'per_discount_format', 'amount_sold_format', 'total_value']]
 data_all = data_all[data_all['amount_sold_format'] > 0]
-get_head_title(5, "เพื่อหาช่องทางการขายที่เหมาะสม")
+
 section_title("แพลตฟอร์มใด (Shopee หรือ Lazada) มีอัตราการลดราคาสินค้าโดยเฉลี่ยมากกว่ากัน และมีผลต่อยอดขายอย่างไร")
+mean_total_value = data_all['total_value'].mean()
+mean_amount_sold = data_all['amount_sold_format'].mean()
 discount_stats = data_all.groupby('marketplace').agg({
     'amount_sold_format': 'sum',
     'per_discount_format': 'sum',
     'total_value': 'sum'
 }).reset_index()
 
+display_data = data_all.describe().reset_index()
+display_data = display_data[['index', 'amount_sold_format', 'total_value']]
+display_data.rename(columns={'index': '', 'amount_sold_format': 'ยอดขาย (ชิ้น)', 'total_value': 'ยอดขาย'}, inplace=True)
+st.dataframe(display_data, hide_index=True)
 # avg_discount = data_all.groupby('marketplace')['per_discount_format'].mean()
 # Calculate correlation between discount and sales for each marketplace
 # correlation = data_all.groupby('marketplace').apply(lambda x: x['per_discount_format'].corr(x['total_value']))
@@ -164,8 +169,8 @@ discount_stats = data_all.groupby('marketplace').agg({
 # total_discount = discount_stats['percent_discount'].sum()
 # discount_stats['percent_of_total_discount'] = (discount_stats['percent_discount'] / total_discount) * 100
 # discount_stats['percent_of_total_discount'] = discount_stats['percent_of_total_discount'].map("{:.2f}%".format)
-mean_total_value = discount_stats['total_value'].mean()
-mean_amount_sold = discount_stats['amount_sold_format'].mean()
+# mean_total_value = discount_stats['total_value'].mean()
+# mean_amount_sold = discount_stats['amount_sold_format'].mean()
 get_bar_comparison(discount_stats, mean_total_value, mean_amount_sold)
 
 st.divider()
