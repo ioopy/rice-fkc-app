@@ -7,6 +7,7 @@ from utils.load_data import get_data
 from utils.text_editor import generate
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+import numpy as np
 
 get_head_title(5, "เพื่อหาช่องทางการขายที่เหมาะสม")
 
@@ -15,19 +16,23 @@ def get_bar_plot(data, title, is_grop=False):
         'shopee': '#FE6132',
         'lazada': '#0F0C76 ',
     }
+    # data = data[data['total_value'] > 0]
+
+    data['text'] = np.where(data['amount_sold_format'] == 0, '', data['amount_sold_format'].apply(lambda x: f'{x:,.2f}'))
     data['color'] = data['marketplace'].map(marketplace_colors)
     fig = px.bar(
             data,
-            x='total_value', 
+            x='amount_sold_format', 
             y='discount_range',
             color=data["marketplace"],
             color_discrete_map=marketplace_colors,
             orientation='h',
             barmode='group',
             height=600,
-            text='total_value'
+            text='text'
         )        
-    fig.update_traces(texttemplate='%{text:,}', textposition='auto')
+    fig.update_traces(texttemplate='%{text}', textposition='outside')
+    fig.update_xaxes(range=[1, 150000], title_text="ยอดขาย (ชิ้น)")
     fig.update_layout(
         title={
             'text': title,
@@ -41,8 +46,15 @@ def get_bar_plot(data, title, is_grop=False):
             size=18,
         ),
         yaxis_title="% ส่วนลด",
-        xaxis_title="ยอดขาย (ชิ้น)",
+        xaxis_title="ยอดขาย (ชิ้น) ",
         legend_title_text='',
+        legend=dict(
+            orientation="h",        # Set the legend orientation to horizontal
+            yanchor="bottom",       # Anchor the legend at the bottom
+            y=1,                    # Position the legend above the graph
+            xanchor="center",       # Center the legend horizontally
+            x=0.5                   # Set the legend to the center of the x-axis
+        ),
     )
     st.plotly_chart(fig, theme="streamlit")
 
@@ -151,6 +163,6 @@ section_title("ยอดขายของสินค้าที่มีส�
 bins = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 labels = ['0-10%', '11-20%', '21-30%', '31-40%', '41-50%', '51-60%', '61-70%', '71-80%', '81-90%', '91-100%']
 data_all['discount_range'] = pd.cut(data_all['per_discount_format'], bins=bins, labels=labels, include_lowest=True)
-discount_summary = data_all.groupby(['marketplace','discount_range'])['total_value'].sum().reset_index()
+discount_summary = data_all.groupby(['marketplace','discount_range'])['amount_sold_format'].sum().reset_index()
 # discount_summary = discount_summary.sort_values(by=['total_value'], ascending=[True])
 get_bar_plot(discount_summary, "")

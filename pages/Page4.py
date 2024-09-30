@@ -10,7 +10,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 
-get_head_title(4, "เพื่อดึงลูกค้า")
+get_head_title(4, "เพื่อดึงดูดลูกค้า")
 
 def get_scatter_plot(data):
     mean_discount_price = data['discount_price_format'].mean()
@@ -172,22 +172,21 @@ def get_bar_comparison(data, mean_total_value, mean_amount_sold, is_shopee=False
 data_all = get_data()
 data_all = data_all[['marketplace', 'product_nm', 'star_review', 'original_price', 'discount_price_format', 'per_discount_format', 'amount_sold_format', 'province', 'total_value']]
 data_all = data_all[data_all['amount_sold_format'] > 0]
-data_all['total_sale'] = data_all['amount_sold_format'] * data_all['discount_price_format']
+
 data_all['province'] = data_all['province'].str.replace('China', 'ต่างประเทศ').str.replace('Loei', 'เลย')
-data_all = data_all[data_all['discount_price_format'] > 0]
 
 
 section_title("สินค้าที่มีราคาหลังหักส่วนลดต่ำกว่าค่าเฉลี่ยได้รับรีวิวดีขึ้นหรือไม่") #discount_price, star_review
-data_all = data_all[data_all['star_review'] > 0]
 data_sorted = data_all.sort_values(by='discount_price_format', ascending=False)
 get_scatter_plot(data_sorted)
 
 st.divider()
 section_title("ร้านในพื้นที่ใดมีแนวโน้มที่จะมีลูกค้าใช้จ่ายมากที่สุดในสินค้าที่มีราคาสูงหลังหักส่วนลด") #province, original_price, amount_sold
-data_all = data_all[data_all['amount_sold_format'] > 0]
 
 st.write("shopee")
 data_all1 = data_all[data_all['marketplace'] == 'shopee']  
+# data_stat = data_all1.describe()
+# st.write(data_stat)
 mean_total_value = data_all1['total_value'].mean()
 mean_amount_sold = data_all1['amount_sold_format'].mean()
 discount_stats = data_all1.groupby(['marketplace', 'province']).agg({
@@ -206,6 +205,8 @@ get_bar_comparison(df_melted, mean_total_value, mean_amount_sold, True)
 
 st.write("lazada")
 data_all = data_all[data_all['marketplace'] == 'lazada']  
+# data_stat = data_all.describe()
+# st.write(data_stat)
 mean_total_value = data_all['total_value'].mean()
 mean_amount_sold = data_all['amount_sold_format'].mean()
 discount_stats = data_all.groupby(['marketplace', 'province']).agg({
@@ -221,41 +222,3 @@ df_melted = df_melted.sort_values(by=['metric', 'value'], ascending=[False, True
 # mean_total_value = df_melted[df_melted['metric'] == 'total_value']['value'].mean()
 # mean_amount_sold = df_melted[df_melted['metric'] == 'amount_sold_format']['value'].mean()
 get_bar_comparison(df_melted, mean_total_value, mean_amount_sold)
-
-# get_bar_plot(data_all)
-fig_bubble = px.scatter(
-    data_all,
-    x='total_value',
-    y='province',
-    size='total_sale',
-    color='original_price',
-    hover_name="province",
-    log_x=True, 
-    labels={'star_review': 'คะแนน', 'original_price': 'ราคา', 'marketplace': 'Marketplace', 'total_sale': 'sale value', 'province': 'จังหวัด', 'amount_sold_format': 'ยอดขาย'},
-    size_max=60,
-    height=600,
-    color_continuous_scale='Viridis'
-)
-fig_bubble.update_layout(
-    yaxis_title="",
-    xaxis_tickfont_size=16,
-    yaxis_tickfont_size=16,
-    font=dict(
-        size=18,
-    ),
-    legend=dict(
-        orientation="h",        # Set the legend orientation to horizontal
-        yanchor="bottom",       # Anchor the legend at the bottom
-        y=1,                    # Position the legend above the graph
-        xanchor="center",       # Center the legend horizontally
-        x=0.5                   # Set the legend to the center of the x-axis
-    ),
-    legend_title_text='',
-)
-fig_bubble.update_traces(
-    marker=dict(
-        line=dict(width=1, color='DarkSlateGrey')  # Optional: add a border to each marker
-    )
-)
-
-# st.plotly_chart(fig_bubble, theme="streamlit")

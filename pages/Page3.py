@@ -110,6 +110,12 @@ st.divider()
 section_title("การลดราคามากกว่า 30% มีผลทำให้ยอดขายเพิ่มขึ้นหรือไม่")
 data_all = data_all[data_all['per_discount_format'] > 30]
 data_sorted = data_all.sort_values(by=['per_discount_format', 'amount_sold_format'], ascending=[False, True])
+
+fig = make_subplots(rows=3, cols=2, subplot_titles=[
+    "ข้าวเหนียวพันธุ์ กข6", "ข้าวเหนียวก่ำ", "ข้าวเหนียวเขี้ยวงู", 
+    "ข้าวหอมนิลล้านนา", "ข้าวเหนียวสันป่าตอง", "ข้าวหอมมะลิแท้เชียงราย100%"
+])
+
 # Add the traces to the subplot grid
 fig.add_trace(get_line_trace(data_sorted[data_sorted['product_nm'] == 'ข้าวเหนียวพันธุ์ กข6'], 'ข้าวเหนียวพันธุ์ กข6'), row=1, col=1)
 fig.add_trace(get_line_trace(data_sorted[data_sorted['product_nm'] == 'ข้าวเหนียวก่ำ'], 'ข้าวเหนียวก่ำ'), row=1, col=2)
