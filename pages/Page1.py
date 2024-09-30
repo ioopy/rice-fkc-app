@@ -5,33 +5,19 @@ import plotly.express as px
 
 get_head_title(1, "เพื่อศึกษาแบรนด์ที่ยอดขายสูง")
 
-def get_bar_plot(data, title, is_grop=False):
-    if is_grop:
-        data = data.sort_values(by=['marketplace', 'amount_sold_format'], ascending=[False, True])
-        data.rename(columns={'amount_sold_format': 'ยอดขาย'}, inplace=True)
-        fig = px.bar(
-            data,
-            x='ยอดขาย', 
-            y='product_nm',
-            color=data["marketplace"],
-            color_discrete_map=get_color_map(),
-            orientation='h',
-            barmode='group',
-            height=700,
-            text='ยอดขาย'
-        )
-    else:
-        data = data.sort_values('total_value', ascending=False)
-        data.rename(columns={'total_value': 'ยอดขาย'}, inplace=True)
-        fig = px.bar(
-            data,
-            x='ยอดขาย', 
-            y='marketplace',
-            color=data["marketplace"],
-            orientation='h',
-            text='ยอดขาย',
-            color_discrete_map=get_color_map(),
-        )         
+def get_bar_plot(data, title):
+    data = data.sort_values('total_value', ascending=False)
+    data.rename(columns={'total_value': 'ยอดขาย'}, inplace=True)
+    fig = px.bar(
+        data,
+        x='ยอดขาย', 
+        y='marketplace',
+        color=data["marketplace"],
+        orientation='h',
+        text='ยอดขาย',
+        color_discrete_map=get_color_map(),
+    ) 
+    
     fig.update_traces(texttemplate='%{text:.2s}', textposition='auto')
     fig.update_layout(
         title={
@@ -109,6 +95,15 @@ data_all = data_all[data_all['amount_sold_format'] > 0]
 
 section_title("ระหว่าง Shopee และ Lazada แพลตฟอร์มใดที่มียอดขายเฉลี่ยของสินค้าสูงกว่ากัน")
 grouped_df = data_all.groupby('marketplace')['total_value'].sum().reset_index()
+
+display = data_all.groupby('marketplace').agg(
+    total_value_sum=('total_value', 'sum'),
+    total_value_mean=('total_value', 'mean')
+).reset_index()
+
+display['total_value_mean'] = display['total_value_mean'].apply(lambda x: f"{x:,.2f}")
+display.rename(columns={'total_value_sum': 'ยอดขายรวม', 'total_value_mean': 'ยอดขายเฉลี่ย'}, inplace=True)
+st.dataframe(display, hide_index=True)
 get_bar_plot(grouped_df, "")
 
 
