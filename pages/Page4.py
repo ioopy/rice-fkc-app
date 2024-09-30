@@ -91,24 +91,24 @@ def get_bar_comparison(data, mean_total_value, mean_amount_sold, is_shopee=False
         ),
         row=1, col=1  # First subplot
     )
-    fig.add_shape(
-        type="line",
-        x0=mean_total_value, x1=mean_total_value,  # Vertical line at mean value
-        y0=0, y1=len(filtered_data_total_value['province']),  # Full height of the graph (normalized y-coordinates)
-        xref="x1", yref="paper",  # Refer to the first x-axis and full figure height
-        line=dict(color="red", width=2, dash="dash"),  # Style of the mean line
-        row=1, col=1  # First subplot
-    )
-    fig.add_annotation(
-        x=mean_total_value * 0.5, 
-        y=len(filtered_data_total_value['province']),  # Position the annotation at the top of the graph
-        showarrow=False,
-        xref="x1", 
-        yref="paper", 
-        text=f"ค่าเฉลี่ย: {mean_total_value:,.2f}",  # Text showing the mean value
-        font=dict(color="red", size=12),  # Customize font color and size
-        row=1, col=1  # Apply to the first subplot
-    )
+    # fig.add_shape(
+    #     type="line",
+    #     x0=mean_total_value, x1=mean_total_value,  # Vertical line at mean value
+    #     y0=0, y1=len(filtered_data_total_value['province']),  # Full height of the graph (normalized y-coordinates)
+    #     xref="x1", yref="paper",  # Refer to the first x-axis and full figure height
+    #     line=dict(color="red", width=2, dash="dash"),  # Style of the mean line
+    #     row=1, col=1  # First subplot
+    # )
+    # fig.add_annotation(
+    #     x=mean_total_value * 0.5, 
+    #     y=len(filtered_data_total_value['province']),  # Position the annotation at the top of the graph
+    #     showarrow=False,
+    #     xref="x1", 
+    #     yref="paper", 
+    #     text=f"ค่าเฉลี่ย: {mean_total_value:,.2f}",  # Text showing the mean value
+    #     font=dict(color="red", size=12),  # Customize font color and size
+    #     row=1, col=1  # Apply to the first subplot
+    # )
 
     top_10_total_value_provinces = filtered_data_total_value['province'].unique()
     filtered_data_amount_sold = data[
@@ -129,24 +129,24 @@ def get_bar_comparison(data, mean_total_value, mean_amount_sold, is_shopee=False
         ),
         row=1, col=2  # Second subplot
     )
-    fig.add_shape(
-        type="line",
-        x0=mean_amount_sold, x1=mean_amount_sold,  # Vertical line at mean value
-        y0=0, y1=len(filtered_data_total_value['province']),  # Full height of the graph (normalized y-coordinates)
-        xref="x2", yref="paper",  # Refer to the second x-axis and full figure height
-        line=dict(color="red", width=2, dash="dash"),  # Style of the mean line
-        row=1, col=2  # Second subplot
-    )
-    fig.add_annotation(
-        x=mean_amount_sold, 
-        y=len(filtered_data_total_value['province']),  # Position the annotation at the top of the graph
-        showarrow=False,
-        xref="x1", 
-        yref="paper", 
-        text=f"ค่าเฉลี่ย: {mean_amount_sold:,.2f}",  # Text showing the mean value
-        font=dict(color="red", size=12),  # Customize font color and size
-        row=1, col=2  # Apply to the first subplot
-    )
+    # fig.add_shape(
+    #     type="line",
+    #     x0=mean_amount_sold, x1=mean_amount_sold,  # Vertical line at mean value
+    #     y0=0, y1=len(filtered_data_total_value['province']),  # Full height of the graph (normalized y-coordinates)
+    #     xref="x2", yref="paper",  # Refer to the second x-axis and full figure height
+    #     line=dict(color="red", width=2, dash="dash"),  # Style of the mean line
+    #     row=1, col=2  # Second subplot
+    # )
+    # fig.add_annotation(
+    #     x=mean_amount_sold, 
+    #     y=len(filtered_data_total_value['province']),  # Position the annotation at the top of the graph
+    #     showarrow=False,
+    #     xref="x1", 
+    #     yref="paper", 
+    #     text=f"ค่าเฉลี่ย: {mean_amount_sold:,.2f}",  # Text showing the mean value
+    #     font=dict(color="red", size=12),  # Customize font color and size
+    #     row=1, col=2  # Apply to the first subplot
+    # )
 
     fig.update_layout(
         showlegend=False,

@@ -61,7 +61,7 @@ def get_bar_plot_group(data, title):
         height=700,
         color_discrete_map=get_color_map(),
         text='ยอดขาย')
-    fig.update_traces(texttemplate='%{text:.2s} ชิ้น', textposition='auto')
+    fig.update_traces(texttemplate='%{text:.2s}', textposition='auto')
     fig.update_layout(
         title={
             'text': title,
@@ -70,7 +70,7 @@ def get_bar_plot_group(data, title):
             'yanchor': 'top'  # Keep it at the top
         },
         yaxis_title="",
-        xaxis_title="ยอดขาย",
+        xaxis_title="ยอดขาย (ชิ้น)",
         xaxis_tickfont_size=16,
         yaxis_tickfont_size=16,
         font=dict(
